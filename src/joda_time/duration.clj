@@ -37,25 +37,25 @@
     - end instant and a period
 
     (duration 1000)
-    ; => #<Duration PT1S>
+    => #<Duration PT1S>
 
     (duration (interval 0 1000))
-    ; => #<Duration PT1S>
+    => #<Duration PT1S>
 
     (duration \"PT1S\")
-    ; => #<Duration PT1S>
+    => #<Duration PT1S>
 
     (duration (duration 1000))
-    ; => #<Duration PT1S>
+    => #<Duration PT1S>
 
     (duration {:start 0, :end 1000})
-    ; => #<Duration PT1S>
+    => #<Duration PT1S>
 
     (duration {:start 0, :period (seconds 1)})
-    ; => #<Duration PT1S>
+    => #<Duration PT1S>
 
     (duration {:end 0, :period (seconds 1)})
-    ; => #<Duration PT1S>"
+    => #<Duration PT1S>"
   [o] (if (nil? o) nil
         (cond (number? o) (Duration. (long o))
               (map? o) (if (empty? o) nil (duration-from-map o))

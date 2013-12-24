@@ -110,16 +110,16 @@
   millis or a formatted string:
 
     (instant)
-    ; => #<Instant ...now...>
+    => #<Instant ...now...>
 
     (instant (java.util.Date.))
-    ; => #<Instant ...now...>
+    => #<Instant ...now...>
 
     (instant 1000)
-    ; => #<Instant 1970-01-01T00:00:01.000Z>
+    => #<Instant 1970-01-01T00:00:01.000Z>
 
     (j/instant \"1970-01-01T00:00:01.000Z\")
-    ; => #<Instant 1970-01-01T00:00:01.000Z>"
+    => #<Instant 1970-01-01T00:00:01.000Z>"
   ([] (Instant.))
   ([o] (cond (nil? o) nil
              (map? o) (.toInstant ^DateTime (date-time o))
