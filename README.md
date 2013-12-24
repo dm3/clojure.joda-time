@@ -24,8 +24,9 @@ timezone by default, as they are in **clj-time**.
 
 ## Usage
 
-API of the Clojure.Joda-Time consists of one namespace, namely: `joda-time`.
-For the purposes of this guide, we will `use` the main namespace:
+[API](http://dm3.github.io/clojure.joda-time/) of the Clojure.Joda-Time
+consists of one namespace, namely: `joda-time`.  For the purposes of this
+guide, we will `use` the main namespace:
 
     (refer-clojure :exclude (merge partial iterate print))
     (use 'joda-time)
