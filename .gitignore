@@ -1,0 +1,9 @@
+target
+*.jar
+bin
+.lein-repl-history
+.lein-failures
+.nrepl-port
+.idea
+besafe.iml
+doc
