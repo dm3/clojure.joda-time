@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [merge partial iterate format print contains? max min])
   (:require [joda-time.potemkin.namespaces :as pns]
             [joda-time core seqs interval duration period instant
-             partial property sugar format]))
+             partial property sugar format convert]))
 
 (pns/import-vars
   [joda-time.core
@@ -31,6 +31,9 @@
 
   [joda-time.seqs
    iterate]
+
+  [joda-time.convert
+   to-java-date to-sql-date to-sql-timestamp to-millis-from-epoch]
 
   [joda-time.period period mutable-period
    years months weeks days hours minutes seconds millis

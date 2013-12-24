@@ -28,7 +28,7 @@ timezone by default, as they are in **clj-time**.
 consists of one namespace, namely: `joda-time`.  For the purposes of this
 guide, we will `use` the main namespace:
 
-    (refer-clojure :exclude (merge partial iterate print))
+    (refer-clojure :exclude [merge partial iterate format print contains? max min])
     (use 'joda-time)
 
 ### An appetizer
@@ -66,7 +66,7 @@ Now for the date:
     (def in-five-years (plus now five-years-and-some))
     => #<DateTime 2019-06-10T13:07:16.000+03:00>
 
-    (def in-five-years-local (plus now-local (period {:years 5, :months 6})))
+    (def in-five-years-local (plus now-local five-years-and-some))
     => #<LocalDateTime 2019-06-10T13:07:16.000>
 
 How many hours to the point five years and six months from now?
@@ -141,6 +141,29 @@ And what about parsing?
 
     (j/parse-local-date our-formatter "2013/12/10")
     => #<LocalDate 2013-12-10>
+
+How should we convert between Joda dates and java.util/sql Dates?
+
+    (local-date now)
+    => #<LocalDate 2013-12-10>
+
+    (local-time now)
+    => #<LocalTime 13:07:16.000>
+
+    (to-java-date now)
+    => #inst "2013-12-10T11:07:16.000-00:00"
+
+    (to-java-date local-now)
+    => #inst "2013-12-10T11:07:16.000-00:00"
+
+    (to-sql-date now)
+    => #inst "2013-12-10T11:07:16.000-00:00"
+
+    (to-sql-timestamp now)
+    => #inst "2013-12-10T11:07:16.000000000-00:00"
+
+    (to-millis-from-epoch now)
+    => 1386673636000
 
 I hope you're interested. However, we've barely scratched the surface of the
 API. Please, continue reading for a deeper look.
