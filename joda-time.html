@@ -61,25 +61,25 @@ map containing:
   - end instant and a period
 
   (duration 1000)
-  ; =&gt; #&lt;Duration PT1S&gt;
+  =&gt; #&lt;Duration PT1S&gt;
 
   (duration (interval 0 1000))
-  ; =&gt; #&lt;Duration PT1S&gt;
+  =&gt; #&lt;Duration PT1S&gt;
 
   (duration &quot;PT1S&quot;)
-  ; =&gt; #&lt;Duration PT1S&gt;
+  =&gt; #&lt;Duration PT1S&gt;
 
   (duration (duration 1000))
-  ; =&gt; #&lt;Duration PT1S&gt;
+  =&gt; #&lt;Duration PT1S&gt;
 
   (duration {:start 0, :end 1000})
-  ; =&gt; #&lt;Duration PT1S&gt;
+  =&gt; #&lt;Duration PT1S&gt;
 
   (duration {:start 0, :period (seconds 1)})
-  ; =&gt; #&lt;Duration PT1S&gt;
+  =&gt; #&lt;Duration PT1S&gt;
 
   (duration {:end 0, :period (seconds 1)})
-  ; =&gt; #&lt;Duration PT1S&gt;</pre></div><div class="public" id="var-duration%3F"><h3>duration?</h3><div class="usage"><code>(duration? x)</code></div><pre class="doc">True if the given object is an instance of `ReadableDuration`.
+  =&gt; #&lt;Duration PT1S&gt;</pre></div><div class="public" id="var-duration%3F"><h3>duration?</h3><div class="usage"><code>(duration? x)</code></div><pre class="doc">True if the given object is an instance of `ReadableDuration`.
 </pre></div><div class="public" id="var-end"><h3>end</h3><div class="usage"><code>(end i)</code></div><pre class="doc">Gets the end of the interval.
 </pre></div><div class="public" id="var-formatter"><h3>formatter</h3><div class="usage"><code>(formatter fmt &amp; more)</code></div><pre class="doc">Constructs a DateTimeFormatter out of a number of
 
@@ -96,16 +96,16 @@ instants, date-times or partials. Also handles durations.</pre></div><div class=
 millis or a formatted string:
 
   (instant)
-  ; =&gt; #&lt;Instant ...now...&gt;
+  =&gt; #&lt;Instant ...now...&gt;
 
   (instant (java.util.Date.))
-  ; =&gt; #&lt;Instant ...now...&gt;
+  =&gt; #&lt;Instant ...now...&gt;
 
   (instant 1000)
-  ; =&gt; #&lt;Instant 1970-01-01T00:00:01.000Z&gt;
+  =&gt; #&lt;Instant 1970-01-01T00:00:01.000Z&gt;
 
   (j/instant &quot;1970-01-01T00:00:01.000Z&quot;)
-  ; =&gt; #&lt;Instant 1970-01-01T00:00:01.000Z&gt;</pre></div><div class="public" id="var-instant%3F"><h3>instant?</h3><div class="usage"><code>(instant? x)</code></div><pre class="doc">True if the given object is an instance of `ReadableInstant`.
+  =&gt; #&lt;Instant 1970-01-01T00:00:01.000Z&gt;</pre></div><div class="public" id="var-instant%3F"><h3>instant?</h3><div class="usage"><code>(instant? x)</code></div><pre class="doc">True if the given object is an instance of `ReadableInstant`.
 </pre></div><div class="public" id="var-interval"><h3>interval</h3><div class="usage"><code>(interval o__956__auto__)</code><code>(interval start__957__auto__ end__958__auto__)</code></div><pre class="doc">Constructs an interval out of another interval, a string,
 start and end instants/date-times or a map with the
 following keys (where start/end may be instants, date-times
@@ -134,13 +134,13 @@ Useful when you want to produce a sequence of dates/periods/intervals, for
 example:
 
   (iterate plus (millis 0) 1)
-  ; =&gt; (#&lt;Period PT0S&gt; #&lt;Period PT0.001S&gt; #&lt;Period PT0.002S&gt; ...)
+  =&gt; (#&lt;Period PT0S&gt; #&lt;Period PT0.001S&gt; #&lt;Period PT0.002S&gt; ...)
 
   (iterate plus (local-date &quot;2010-01-01&quot;) (years 1))
-  ; =&gt; (#&lt;LocalDate 2010-01-01&gt; #&lt;LocalDate 2011-01-01&gt; ...)
+  =&gt; (#&lt;LocalDate 2010-01-01&gt; #&lt;LocalDate 2011-01-01&gt; ...)
 
   (iterate move-end-by (interval 0 1000) (seconds 1))
-  ; =&gt; (#&lt;Interval 00.000/01.000&gt; #&lt;Interval 00.000/02.000&gt; ...)</pre></div><div class="public" id="var-local-date"><h3>local-date</h3><div class="usage"><code>(local-date)</code><code>(local-date o__1590__auto__)</code></div><pre class="doc">Constructs a LocalDate out of 
+  =&gt; (#&lt;Interval 00.000/01.000&gt; #&lt;Interval 00.000/02.000&gt; ...)</pre></div><div class="public" id="var-local-date"><h3>local-date</h3><div class="usage"><code>(local-date)</code><code>(local-date o__1590__auto__)</code></div><pre class="doc">Constructs a LocalDate out of 
 
 * another partial (which must have all of the needed fields)
 * an instant or a number of milliseconds
