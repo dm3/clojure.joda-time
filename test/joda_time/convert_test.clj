@@ -10,7 +10,8 @@
            [java.sql Timestamp]))
 
 (defspec joda-millis-equal-to-java-millis 100
-  (prop/for-all [joda-date (gen/one-of [jg/any-instant jg/local-date jg/local-date-time])]
+  (prop/for-all [joda-date (gen/one-of [jg/instant (jg/date-time)
+                                        jg/local-date jg/local-date-time])]
                 (= (j/to-millis-from-epoch joda-date)
                    (.getTime (j/to-java-date joda-date)))))
 
@@ -27,6 +28,5 @@
       (are [ctor] (= java-date (convert-fn (ctor millis-2013-12-10)))
            j/date-time
            j/instant
-           j/mutable-date-time
            j/local-date
            j/local-date-time))))

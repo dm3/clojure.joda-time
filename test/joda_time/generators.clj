@@ -108,19 +108,9 @@
            hour-of-day minute-of-hour second-of-minute
            millis-of-second (g/return chrono)))
 
-(defn- mutable-date-time [& {:keys [chrono] :or {chrono default-chronology}}]
-  (g/fmap (clojure.core/partial apply #(MutableDateTime. %1 %2 %3 %4 %5 %6 %7 %8))
-          (date-time-tuple :chrono chrono)))
-
 (defn date-time [& {:keys [chrono] :or {chrono default-chronology}}]
   (g/fmap (clojure.core/partial apply #(DateTime. %1 %2 %3 %4 %5 %6 %7 %8))
           (date-time-tuple :chrono chrono)))
-
-(def any-date-time
-  (g/one-of [(date-time) (mutable-date-time)]))
-
-(def any-instant
-  (g/one-of [instant any-date-time]))
 
 ;;;;;;;;;; Periods
 

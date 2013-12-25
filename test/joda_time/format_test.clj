@@ -1,7 +1,8 @@
 (ns joda-time.format-test
   (:require [clojure.test :refer :all]
             [joda-time :as j]
-            [joda-time.format :as f]))
+            [joda-time.format :as f])
+  (:import [org.joda.time MutableDateTime]))
 
 (deftest parses-date-entities
   (let [fmt (j/formatter "MM/dd/YYYY HH-mm-ss/SSS")
@@ -9,7 +10,7 @@
         fmt-str "10/01/2010 10-20-30/500"]
     (testing "date-times"
       (is (= (j/date-time iso-str) (j/parse-date-time fmt fmt-str)))
-      (is (= (j/mutable-date-time iso-str) (j/parse-mutable-date-time fmt fmt-str))))
+      (is (= (MutableDateTime. iso-str) (j/parse-mutable-date-time fmt fmt-str))))
     (testing "locals"
       (is (= (j/local-date "2010-10-01") (j/parse-local-date fmt fmt-str)))
       (is (= (j/local-date-time iso-str) (j/parse-local-date-time fmt fmt-str)))))

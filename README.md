@@ -196,13 +196,10 @@ entity constructed at the current date and time.
 #### Instants
 
 In Joda-Time [instants](http://www.joda.org/joda-time/key_instant.html) are
-represented by `DateTime`, `MutableDateTime` and `Instant` types.
+represented by `DateTime` and `Instant` types.
 
     (date-time)
     => #<DateTime 2013-12-10T10:20:13.133+02:00>
-
-    (mutable-date-time)
-    => #<MutableDateTime 2013-12-10T10:20:15.295+02:00>
 
     (instant)
     => #<Instant 2013-12-10T10:20:16.233+02:00>

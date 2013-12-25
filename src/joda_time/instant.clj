@@ -36,26 +36,24 @@
     [year monthOfYear dayOfMonth hourOfDay minuteOfHour secondOfMinute
      millisOfSecond chronology]))
 
-(doseq [date-time-type ['DateTime 'MutableDateTime]]
-  (let [fn-name (symbol (impl/dashize (str date-time-type)))
-        ctor-fn (symbol (str 'mk- fn-name))]
-    (eval `(defn- ~ctor-fn [y# m# d# h# mm# s# mmm# chrono#]
-             (~(symbol (str date-time-type '.)) (int y#) (int m#) (int d#) (int h#)
-                       (int mm#) (int s#) (int mmm#) ^Chronology chrono#)))
-    (eval `(defn ~(with-meta fn-name {:tag date-time-type})
-             ~(str "Constructs a " date-time-type " out of:\n\n"
-                   "  * another instant or a number of milliseconds\n"
-                   "  * a java (util/sql) Date/Timestamp or a Calendar\n"
-                   "  * an ISO formatted string\n"
-                   "  * a map with keys corresponding to the names of date-time field types\n"
-                   "    and an (optional) chronology.\n\n"
-                   "  When called with no arguments produces a value of `" date-time-type "/now`.")
-             ([] (. ~date-time-type now))
-             ([o#]
-              (cond
-                (nil? o#) nil
-                (map? o#) (apply ~ctor-fn (date-time-ctor-from-map o#))
-                :else (~(symbol (str date-time-type '.)) o#)))))))
+(defn- mk-date-time [y m d h mm s mmm chrono]
+  (DateTime. (int y) (int m) (int d) (int h) (int mm) (int s) (int mmm) ^Chronology chrono))
+
+(defn ^DateTime date-time
+  "Constructs a DateTime out of:
+
+  * another instant or a number of milliseconds
+  * a java (util/sql) Date/Timestamp or a Calendar
+  * an ISO formatted string
+  * a map with keys corresponding to the names of date-time field types
+  and an (optional) chronology.
+
+  When called with no arguments produces a value of `DateTime/now`."
+  ([] (DateTime/now))
+  ([o] (cond
+         (nil? o) nil
+         (map? o) (apply mk-date-time (date-time-ctor-from-map o))
+         :else (DateTime. o))))
 
 (defn- mseq-minus [^MutableDateTime d objs]
   (doseq [o objs]
