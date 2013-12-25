@@ -9,24 +9,45 @@
   (:import [java.util Date]
            [java.sql Timestamp]))
 
-(defspec joda-millis-equal-to-java-millis 100
-  (prop/for-all [joda-date (gen/one-of [jg/instant (jg/date-time)
-                                        jg/local-date jg/local-date-time])]
-                (= (j/to-millis-from-epoch joda-date)
-                   (.getTime (j/to-java-date joda-date)))))
+(def java-date (gen/fmap #(.toDate ^org.joda.time.DateTime %) (jg/date-time)))
+(def sql-date (gen/fmap #(java.sql.Date. (.getTime ^Date %)) java-date))
+(def sql-timestamp (gen/fmap #(java.sql.Timestamp. (.getTime ^Date %)) java-date))
+
+(defspec convert-to-java-date-returns-same-millis 100
+  (prop/for-all [date (gen/one-of [jg/instant (jg/date-time)
+                                   jg/local-date jg/local-date-time
+                                   jg/year-month java-date sql-date sql-timestamp
+                                   jg/instant-number])]
+                (= (j/to-millis-from-epoch date)
+                   (.getTime (j/to-java-date date))
+                   (.getTime (j/to-sql-date date))
+                   (.getTime (j/to-sql-timestamp date)))))
 
 (def millis-2013-12-10 1386626400000)
 
 (deftest converts-between-dates
-  (doseq [[java-date convert-fn]
-          [[(java.util.Date. ^long millis-2013-12-10) j/to-java-date]
-           [(java.sql.Date. ^long millis-2013-12-10) j/to-sql-date]
-           [(java.sql.Timestamp. ^long millis-2013-12-10) j/to-sql-timestamp]
-           [millis-2013-12-10 j/to-millis-from-epoch]]]
-    (testing "To " (type java-date)
-      (is (nil? (convert-fn nil)))
-      (are [ctor] (= java-date (convert-fn (ctor millis-2013-12-10)))
-           j/date-time
-           j/instant
-           j/local-date
-           j/local-date-time))))
+  (let [^Date date (Date. ^long millis-2013-12-10)]
+    (testing "To java date from complete dates"
+      (is (nil? (j/to-java-date nil)))
+      (are [d] (= (j/to-java-date d) date)
+           millis-2013-12-10
+           "2013-12-09T22:00:00.000-00:00"
+           date
+           (java.sql.Date. (.getTime date))
+           (java.sql.Timestamp. (.getTime date))
+           (j/local-date "2013-12-10")
+           (j/local-date-time "2013-12-10T00:00:00.000")))
+
+    (testing "To java date from partial dates"
+      (is (= (j/to-java-date (j/date-time "1970-12-10"))
+             (j/to-java-date (j/month-day "1970-12-10"))))
+      (is (= (j/to-java-date (j/date-time "2013-12-01"))
+             (j/to-java-date (j/year-month "2013-12")))))
+
+    (testing "Conversion back and forth preserves timezone"
+      (let [ld (j/local-date)]
+        (is (= (j/local-date (j/to-java-date ld)) ld)))
+      (let [ldt (j/local-date-time)]
+        (is (= (j/local-date-time (j/to-java-date ldt)) ldt)))
+      (let [dt (j/date-time)]
+        (is (= (j/date-time (j/to-java-date dt)) dt))))))

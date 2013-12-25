@@ -27,3 +27,13 @@
 (deftest before-after-test
   (is (j/before? (j/date-time "2010") (j/date-time "2011") (j/date-time "2012")))
   (is (j/after? (j/date-time "2012") (j/date-time "2011") (j/date-time "2010"))))
+
+(deftest construct-from-partial
+  (is (= (j/date-time (j/local-date "2013-12-10"))
+         (j/date-time "2013-12-10")))
+  (is (= (j/date-time (j/local-date-time "2013-12-10T12:20:30.000"))
+         (j/date-time "2013-12-10T12:20:30.000")))
+  (is (= (j/date-time (j/partial {:year 2010, :hourOfDay 10}))
+         (j/date-time "2010-01-01T10:00:00.000")))
+  (let [ldt (j/local-date-time)]
+    (is (= (j/local-date-time (j/date-time ldt)) ldt))))

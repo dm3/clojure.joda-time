@@ -4,8 +4,8 @@
             [joda-time.property :as property])
   (:import [org.joda.time ReadablePeriod ReadableDuration
             ReadableInstant Instant DateTime MutableDateTime
-            Chronology DateTimeField DateTimeFieldType]
-           [org.joda.time.base AbstractInstant]))
+            Chronology DateTimeField DateTimeFieldType ReadablePartial]
+           [org.joda.time.base AbstractInstant AbstractPartial]))
 
 ; DateTime and Partial construction could benefit from having default aliases
 ; for DateTimeFieldTypes, such as:
@@ -31,22 +31,32 @@
 
 (defn- date-time-ctor-from-map
   [{:keys [year yearOfEra weekyear monthOfYear dayOfMonth hourOfDay
-           minuteOfHour secondOfMinute millisOfSecond chronology]}]
-  (let [year (or year yearOfEra weekyear)]
-    [year monthOfYear dayOfMonth hourOfDay minuteOfHour secondOfMinute
-     millisOfSecond chronology]))
+           minuteOfHour secondOfMinute millisOfSecond
+           partial base chronology]}]
+  (if (and partial base)
+    [partial base chronology]
+    (let [year (or year yearOfEra weekyear)]
+      [year monthOfYear dayOfMonth hourOfDay minuteOfHour secondOfMinute
+       millisOfSecond chronology])))
 
-(defn- mk-date-time [y m d h mm s mmm chrono]
-  (DateTime. (int y) (int m) (int d) (int h) (int mm) (int s) (int mmm) ^Chronology chrono))
+(defn- mk-date-time
+  ([^ReadablePartial p base chrono]
+   (.withFields (DateTime. base ^Chronology chrono) p))
+  ([y m d h mm s mmm chrono]
+   (DateTime. (int y) (int m) (int d) (int h) (int mm) (int s) (int mmm)
+              ^Chronology chrono)))
 
 (defn ^DateTime date-time
   "Constructs a DateTime out of:
 
-  * another instant or a number of milliseconds
+  * another instant, a number of milliseconds or a partial date
   * a java (util/sql) Date/Timestamp or a Calendar
   * an ISO formatted string
   * a map with keys corresponding to the names of date-time field types
   and an (optional) chronology.
+  * a map with keys `partial` representing any partial date and `base`
+  representing a date-time to be used for fields missing in the partial
+  (defaults to epoch).
 
   When called with no arguments produces a value of `DateTime/now`."
   ([] (DateTime/now))
@@ -54,6 +64,17 @@
          (nil? o) nil
          (map? o) (apply mk-date-time (date-time-ctor-from-map o))
          :else (DateTime. o))))
+
+(try
+  (doto (org.joda.time.convert.ConverterManager/getInstance)
+    (.addInstantConverter
+      (proxy [org.joda.time.convert.AbstractConverter
+              org.joda.time.convert.InstantConverter] []
+        (getSupportedType [] ReadablePartial)
+        (^long getInstantMillis [^Object o ^Chronology chrono]
+          (.getMillis
+            (.withFields (.withTimeAtStartOfDay (DateTime. 0 chrono))
+                         ^ReadablePartial o)))))))
 
 (defn- mseq-minus [^MutableDateTime d objs]
   (doseq [o objs]

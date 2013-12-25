@@ -320,3 +320,7 @@
   Time zones are resolved through the `timezone` function."
   ([nm] ((get-in chronologies [(name nm) :default])))
   ([nm tz] ((get-in chronologies [(name nm) :tz]) tz)))
+
+(extend-type Chronology
+  HasZone
+  (with-zone [c ^DateTimeZone zone] (.withZone c zone)))

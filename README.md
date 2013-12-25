@@ -147,8 +147,14 @@ How should we convert between Joda dates and java.util/sql Dates?
     (local-date now)
     => #<LocalDate 2013-12-10>
 
+    (date-time now-local)
+    => #<DateTime 2013-12-10T13:07:16.000+02:00>
+
     (local-time now)
     => #<LocalTime 13:07:16.000>
+
+    (date-time (local-time now))
+    => #<DateTime 1970-01-01T13:07:16.000+03:00>
 
     (to-java-date now)
     => #inst "2013-12-10T11:07:16.000-00:00"
@@ -507,6 +513,80 @@ a family of `parse` functions:
 
     (parse-local-time fmt "2010/01/01")
     => #<LocalTime 00:00:00.000>
+
+### Conversions
+
+Joda-Time partials, instants and date-times can be converted back and forth
+using the corresponding constructors:
+
+    (def now (date-time))
+    => #<DateTime 2013-12-10T13:07:16.000+02:00>
+
+    (local-date now)
+    => #<LocalDate 2013-12-10>
+
+    (local-date-time now)
+    => #<LocalDateTime 2013-12-10T13:07:16.000>
+
+    (date-time (local-date now))
+    => #<DateTime 2013-12-10T00:00:00.000+02:00>
+
+    (instant (local-date now))
+    => #<Instant 2013-12-10T00:00:00.000Z>
+
+    (date-time (partial {:hourOfDay 12}))
+    => #<DateTime 1970-01-01T12:00:00.000+03:00>
+
+As you can see, conversions to date-time do not force the UTC timezone and set
+the missing fields to the unix epoch. If we want to construct a date-time out
+of a partial and fill the missing fields in another way, we could use the map
+constructor:
+
+    (date-time {:partial (partial {:millisOfDay 1000}), :base now})
+    => #<DateTime 2013-12-10T00:00:01.000+02:00>
+
+You can customize date-time construction from partials by registering a custom
+`InstantConverter` in the Joda `ConverterManager`.
+
+We can also convert Joda date entities to native Java types:
+
+    (to-java-date now)
+    => #inst "2013-12-10T11:07:16.000-00:00"
+
+    (type (to-sql-date now))
+    => java.sql.Date
+
+    (to-sql-timestamp now)
+    => #inst "2013-12-10T11:07:16.000000000-00:00"
+
+    (to-millis-from-epoch now)
+    => 1386673636000
+
+Of course, native Java types can be converted between themselves:
+
+    (to-java-date 1386673636000)
+    => #inst "2013-12-10T11:07:16.000-00:00"
+
+    (to-java-date "2013-12-10")
+    => #inst "2013-12-09T22:00:00.000-00:00"
+
+Don't worry about the seemingly incorrect java date in the last example. We get
+an `2013-12-09` *inst* out of a `2013-12-10` string because *inst* is printed
+in the UTC timezone. We can check that everything is OK by converting back to
+the Joda date-time:
+
+    (= (date-time "2013-12-10") (date-time (to-java-date "2013-12-10")))
+    => true
+
+Same with local dates:
+
+    (= (local-date-time "2013-12-10") (local-date-time (to-java-date "2013-12-10")))
+    => true
+
+Even more conversions:
+
+    (= now (date-time (local-date-time (to-java-date now))))
+    => true
 
 ### Properties
 
