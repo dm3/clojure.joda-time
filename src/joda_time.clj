@@ -42,7 +42,7 @@
    period-type
    period-type->seq]
 
-  [joda-time.interval interval mutable-interval partial-interval
+  [joda-time.interval interval partial-interval
    partial-interval?
    start end contains? overlaps? abuts?
    overlap gap

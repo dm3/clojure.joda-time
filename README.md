@@ -353,14 +353,23 @@ in the docstring):
 
 #### Intervals
 
-[Intervals](http://www.joda.org/joda-time/key_interval.html) consist of two
-types inherited from Joda Time:
+[Intervals](http://www.joda.org/joda-time/key_interval.html) consist of a
+single type inherited from Joda Time:
 
     (interval 0 1000)
     => #<Interval 1970-01-01T00:00:00.000Z/1970-01-01T00:00:01.000Z>
 
-    (mutable-interval 0 1000)
-    => #<MutableInterval 1970-01-01T00:00:00.000Z/1970-01-01T00:00:01.000Z>
+and one additional type defined in this library:
+
+    (partial-interval (partial {:year 0}) (partial {:year 2010}))
+    => #joda_time.interval.PartialInterval{:start #<Partial 0000>, :end #<Partial 2010>}
+
+    (partial-interval (local-date "2010") (local-date "2013"))
+    => #joda_time.interval.PartialInterval{:start #<LocalDate 2010-01-01>,
+                                           :end #<LocalDate 2013-01-01>}
+
+record representation of the partial interval is an implementation detail and
+should not be relied upon.
 
 As you can see, the interval constructor accepts start and end arguments -
 either milliseconds from epoch, instants or date-times. Constructor also
@@ -375,19 +384,6 @@ accepts a map with different combinations of `start`, `end`, `duration` and
 
     (interval {:start 0, :period (seconds 1)})
     => #<Interval 1970-01-01T00:00:00.000Z/1970-01-01T00:00:01.000Z>
-
-There is also an implementation of a Partial interval which consists of two
-partials with equal types:
-
-    (partial-interval (partial {:year 0}) (partial {:year 2010}))
-    => #joda_time.interval.PartialInterval{:start #<Partial 0000>, :end #<Partial 2010>}
-
-    (partial-interval (local-date "2010") (local-date "2013"))
-    => #joda_time.interval.PartialInterval{:start #<LocalDate 2010-01-01>,
-                                           :end #<LocalDate 2013-01-01>}
-
-record representation of the partial interval is an implementation detail and
-should not be relied upon.
 
 Both instant and partial intervals support a common set of operations on their
 start/end (string representation of the interval is shortened for readability):

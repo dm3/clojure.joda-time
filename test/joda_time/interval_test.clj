@@ -169,27 +169,26 @@
 (def d-2020-02 (j/date-time "2020-02-01"))
 
 (deftest interval-construction-test
-  (doseq [ctor-fn [j/interval j/mutable-interval]]
-    (testing "Nil returns nil"
-      (is (nil? (ctor-fn nil))))
+  (testing "Nil returns nil"
+    (is (nil? (j/interval nil))))
 
-    (testing "Mimics Joda-Time constructors through map with parameters"
-      (are [m] (= (ctor-fn d-2005-01 d-2010-01) (ctor-fn m))
-           ; Chronology is looked up from the start instant,
-           ; so the following doesn't work:
-           #_{:start (.getMillis d-2005-01) :end d-2010-01}
-           #_{:start (.getMillis d-2005-01) :end (.getMillis d-2010-01)}
+  (testing "Mimics Joda-Time constructors through map with parameters"
+    (are [m] (= (j/interval d-2005-01 d-2010-01) (j/interval m))
+         ; Chronology is looked up from the start instant,
+         ; so the following doesn't work:
+         #_{:start (.getMillis d-2005-01) :end d-2010-01}
+         #_{:start (.getMillis d-2005-01) :end (.getMillis d-2010-01)}
 
-           {:start d-2005-01, :end d-2010-01}
-           {:start d-2005-01, :end (.getMillis d-2010-01)}
-           {:start d-2005-01, :period (j/years 5)}
-           {:period (j/years 5), :end d-2010-01}
+         {:start d-2005-01, :end d-2010-01}
+         {:start d-2005-01, :end (.getMillis d-2010-01)}
+         {:start d-2005-01, :period (j/years 5)}
+         {:period (j/years 5), :end d-2010-01}
 
-           {:start d-2005-01,
-            :duration (j/duration {:start d-2005-01, :period (j/years 5)})}
+         {:start d-2005-01,
+          :duration (j/duration {:start d-2005-01, :period (j/years 5)})}
 
-           {:duration (j/duration {:start d-2005-01, :period (j/years 5)}),
-            :end d-2010-01}))))
+         {:duration (j/duration {:start d-2005-01, :period (j/years 5)}),
+          :end d-2010-01})))
 
 (deftest interval-operations-test
   (testing "Moves start by a specified duration/period/number of millis"

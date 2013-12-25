@@ -174,28 +174,25 @@
           (and start period)
           [start period])))
 
-(doseq [[t fn-name] [['Interval 'interval]
-                     ['MutableInterval 'mutable-interval]]]
-  (let [ctor (symbol (str t '.))
-        ctor-fn (symbol (str 'mk- fn-name))]
-    (eval `(defn- ~ctor-fn
-             ([x# y#]
-              (cond (and (c/instant? x#) (c/instant? y#))
-                    (~ctor ^ReadableInstant x# ^ReadableInstant y#)
+(defn mk-interval
+  ([x y]
+   (cond (and (c/instant? x) (c/instant? y))
+         (Interval. ^ReadableInstant x ^ReadableInstant y)
 
-                    (c/duration? x#)
-                    (~ctor ^ReadableDuration x# ^ReadableInstant y#)
+         (c/duration? x)
+         (Interval. ^ReadableDuration x ^ReadableInstant y)
 
-                    (c/duration? y#)
-                    (~ctor ^ReadableInstant x# ^ReadableDuration y#)
+         (c/duration? y)
+         (Interval. ^ReadableInstant x ^ReadableDuration y)
 
-                    (c/period? x#)
-                    (~ctor ^ReadablePeriod x# ^ReadableInstant y#)
+         (c/period? x)
+         (Interval. ^ReadablePeriod x ^ReadableInstant y)
 
-                    (c/period? y#)
-                    (~ctor ^ReadableInstant x# ^ReadablePeriod y#)))))
-    (eval `(defn ~(with-meta fn-name {:tag t})
-             ~(str "Constructs an interval out of another interval, a string,
+         (c/period? y)
+         (Interval. ^ReadableInstant x ^ReadablePeriod y))))
+
+(defn ^Interval interval
+  "Constructs an interval out of another interval, a string,
   start and end instants/date-times or a map with the
   following keys (where start/end may be instants, date-times
   or number of milliseconds):
@@ -216,13 +213,13 @@
     => #<Interval 2010-01-01T00:00:00.000+02:00/2013-01-01T00:00:00.000+02:00>
 
     (j/interval {:start (j/date-time \"2010\"), :period (j/years 3)})
-    => #<Interval 2010-01-01T00:00:00.000+02:00/2013-01-01T00:00:00.000+02:00>")
-             ([o#]
-              (cond (nil? o#) nil
-                    (map? o#) (apply ~ctor-fn (interval-from-map o#))
-                    :else (~ctor o#)))
-             ([start# end#] (~ctor-fn (impl/to-instant-if-number start#)
-                                      (impl/to-instant-if-number end#)))))))
+    => #<Interval 2010-01-01T00:00:00.000+02:00/2013-01-01T00:00:00.000+02:00>"
+  ([o]
+   (cond (nil? o) nil
+         (map? o) (apply mk-interval (interval-from-map o))
+         :else (Interval. o)))
+  ([start end] (mk-interval (impl/to-instant-if-number start)
+                            (impl/to-instant-if-number end))))
 
 (defn- to-millis-if-instant [o]
   (if (c/instant? o)

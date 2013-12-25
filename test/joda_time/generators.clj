@@ -88,9 +88,6 @@
                               #(g/tuple (g/return %)
                                         (g/choose % (:max choosable-instant-range))))))
 
-(def mutable-interval
-  (g/fmap #(MutableInterval. %) interval))
-
 (def partial-interval
   (g/fmap #(j/partial-interval ((second %) (j/start (first %)))
                                ((second %) (j/end (first %))))
