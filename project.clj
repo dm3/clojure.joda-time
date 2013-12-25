@@ -1,6 +1,6 @@
 (defproject clojure.joda-time "0.1.1-SNAPSHOT"
   :description "Idiomatic Clojure wrapper for Joda-Time"
-  :url "http://github.com/dm3/clojure.joda.time"
+  :url "http://github.com/dm3/clojure.joda-time"
   :license {:name "MIT License"
             :url "http://opensource.org/licenses/MIT"}
   :scm {:name "git"
