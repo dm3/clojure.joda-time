@@ -5,7 +5,17 @@
 
 (defprotocol ^:private JavaDateable
   (^java.util.Date to-java-date [o]
-                   "Converts (almost) anything to a `java.util.Date`."))
+     "Converts (almost) anything to a `java.util.Date`. By
+     default conversion will happen in the default time zone,
+     i.e.:
+
+       ; In +02:00 zone
+       (to-java-date \"2013-12-10\")
+       => #inst \"2013-12-09T22:00:00.000-00:00\"
+
+       ; In UTC
+       (to-java-date \"2013-12-10\")
+       => #inst \"2013-12-10T00:00:00.000-00:00\""))
 
 (defn ^java.sql.Date to-sql-date
   "Converts a date entity to a `java.sql.Date`."

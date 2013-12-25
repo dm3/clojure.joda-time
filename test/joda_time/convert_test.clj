@@ -23,31 +23,32 @@
                    (.getTime (j/to-sql-date date))
                    (.getTime (j/to-sql-timestamp date)))))
 
-(def millis-2013-12-10 1386626400000)
-
 (deftest converts-between-dates
-  (let [^Date date (Date. ^long millis-2013-12-10)]
-    (testing "To java date from complete dates"
-      (is (nil? (j/to-java-date nil)))
-      (are [d] (= (j/to-java-date d) date)
-           millis-2013-12-10
-           "2013-12-09T22:00:00.000-00:00"
-           date
-           (java.sql.Date. (.getTime date))
-           (java.sql.Timestamp. (.getTime date))
-           (j/local-date "2013-12-10")
-           (j/local-date-time "2013-12-10T00:00:00.000")))
+  (testing "To java date from complete dates"
+    ; Different timezones will produce different milliseconds
+    (testing "in the default timezone"
+      (let [^Date date (Date. ^long (j/to-millis-from-epoch "2013-12-10"))]
+        (is (nil? (j/to-java-date nil)))
+        (are [d] (= (j/to-java-date d) date)
+             (j/to-millis-from-epoch "2013-12-10")
+             date
+             (java.sql.Date. (.getTime date))
+             (java.sql.Timestamp. (.getTime date))
+             (j/date-time (j/to-millis-from-epoch "2013-12-10"))
+             (j/date-time "2013-12-10")
+             (j/local-date "2013-12-10")
+             (j/local-date-time "2013-12-10T00:00:00.000")))))
 
-    (testing "To java date from partial dates"
-      (is (= (j/to-java-date (j/date-time "1970-12-10"))
-             (j/to-java-date (j/month-day "1970-12-10"))))
-      (is (= (j/to-java-date (j/date-time "2013-12-01"))
-             (j/to-java-date (j/year-month "2013-12")))))
+  (testing "To java date from partial dates"
+    (is (= (j/to-java-date (j/date-time "1970-12-10"))
+           (j/to-java-date (j/month-day "1970-12-10"))))
+    (is (= (j/to-java-date (j/date-time "2013-12-01"))
+           (j/to-java-date (j/year-month "2013-12")))))
 
-    (testing "Conversion back and forth preserves timezone"
-      (let [ld (j/local-date)]
-        (is (= (j/local-date (j/to-java-date ld)) ld)))
-      (let [ldt (j/local-date-time)]
-        (is (= (j/local-date-time (j/to-java-date ldt)) ldt)))
-      (let [dt (j/date-time)]
-        (is (= (j/date-time (j/to-java-date dt)) dt))))))
+  (testing "Conversion back and forth preserves timezone"
+    (let [ld (j/local-date)]
+      (is (= (j/local-date (j/to-java-date ld)) ld)))
+    (let [ldt (j/local-date-time)]
+      (is (= (j/local-date-time (j/to-java-date ldt)) ldt)))
+    (let [dt (j/date-time)]
+      (is (= (j/date-time (j/to-java-date dt)) dt)))))
