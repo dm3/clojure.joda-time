@@ -1,5 +1,7 @@
 # Clojure.Joda-Time
 
+[![Build Status](https://travis-ci.org/dm3/clojure.joda-time.png?branch=master)](https://travis-ci.org/dm3/clojure.joda-time)
+
 An idiomatic Clojure wrapper for Joda-Time.
 
 Main goals:
