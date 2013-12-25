@@ -35,7 +35,7 @@
   [joda-time.convert
    to-java-date to-sql-date to-sql-timestamp to-millis-from-epoch]
 
-  [joda-time.period period mutable-period
+  [joda-time.period period
    years months weeks days hours minutes seconds millis
 
    standard-period-type

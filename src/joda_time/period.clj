@@ -63,8 +63,7 @@
                                   ptype]
   (let [ptype (coerce-period-type ptype)]
     (cond (and (and start end) (c/partial? start))
-          ; MutablePeriod doesn't have a corresponding constructor
-          [(Period. ^ReadablePartial start ^ReadablePartial end ^PeriodType ptype)]
+          [start end ptype]
 
           (and start end)
           [(impl/to-instant-if-number start)
@@ -82,24 +81,25 @@
           [years months weeks days hours minutes seconds millis
            (or ptype (coerce-period-type (keys m)))])))
 
-(doseq [[t m n] [['Period 'mk-period 'period]
-                 ['MutablePeriod 'mk-mutable-period 'mutable-period]]]
-  (let [ctor (symbol (str t '.))]
-    (eval `(defn- ~m
-             ([p#] (~ctor ^Period p#))
-             ([x# y# z#]
-              (cond (c/duration? x#)
-                    (~ctor ^ReadableDuration x# ^ReadableInstant y# ^PeriodType z#)
+(defn- mk-period
+  ([p] (Period. ^Period p))
+  ([x y z]
+   (cond (c/partial? x)
+         (Period. ^ReadablePartial x ^ReadablePartial y ^PeriodType z)
 
-                    (c/duration? y#)
-                    (~ctor ^ReadableInstant x# ^ReadableDuration y# ^PeriodType z#)
+         (c/duration? x)
+         (Period. ^ReadableDuration x ^ReadableInstant y ^PeriodType z)
 
-                    :else
-                    (~ctor ^ReadableInstant x# ^ReadableInstant y# ^PeriodType z#)))
-             ([y# m# w# d# h# mm# s# mmm# tt#]
-              (~ctor y# m# w# d# h# mm# s# mmm# tt#))))
-    (eval `(defn ~(with-meta n {:tag t})
-             ~(str "Constructs a " t ". Takes a number, duration, string,
+         (c/duration? y)
+         (Period. ^ReadableInstant x ^ReadableDuration y ^PeriodType z)
+
+         :else
+         (Period. ^ReadableInstant x ^ReadableInstant y ^PeriodType z)))
+  ([y m w d h mm s mmm tt]
+   (Period. y m w d h mm s mmm tt)))
+
+(defn ^Period period
+  "Constructs a Period. Takes a number, duration, string,
   interval, another period or a map.
 
     (period {:years 2, :months 3})
@@ -131,18 +131,17 @@
   e.g. `[:seconds, :millis]`):
 
     (period {:start 0, :duration (* 1000 1000 1000)} [:days])
-     => #<Period P11D>
+    => #<Period P11D>
 
     (period {:start 0, :duration (* 1000 1000 1000)} (period-type :weeks))
-     => #<Period P1W>)")
-             ([] (~ctor))
-             ([o#] (period o# nil))
-             ([o# t#]
-              (if (nil? o#) nil
-                (cond
-                  (number? o#) (~ctor (long o#) ^PeriodType (coerce-period-type t#))
-                  (map? o#) (apply ~m (period-constructor-params o# t#))
-                  :else (~ctor ^Object o# ^PeriodType (coerce-period-type t#)))))))))
+    => #<Period P1W>)"
+  ([] (Period.))
+  ([o] (period o nil))
+  ([o t] (if (nil? o) nil
+           (cond
+             (number? o) (Period. (long o) ^PeriodType (coerce-period-type t))
+             (map? o) (apply mk-period (period-constructor-params o t))
+             :else (Period. ^Object o ^PeriodType (coerce-period-type t))))))
 
 (def ^:private statically-typed-periods
   ['years 'months 'weeks 'days 'hours 'minutes 'seconds])

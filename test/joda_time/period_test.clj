@@ -42,9 +42,8 @@
                                                  (or type (apply j/period-type (keys params)))))))))
 
 (defspec type-of-a-period-is-the-same-as-properties 100
-  (prop/for-all [period-map (jg/period-map)
-                 period-fn (gen/elements [j/period j/mutable-period])]
-                (let [period (period-fn period-map)]
+  (prop/for-all [period-map (jg/period-map)]
+                (let [period (j/period period-map)]
                   (= (set (keys period-map))
                      (-> period j/properties keys set)
                      (-> period j/period-type j/period-type->seq set)))))
