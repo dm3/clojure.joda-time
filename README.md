@@ -24,6 +24,8 @@ timezone by default, as they are in **clj-time**.
 
 ## Usage
 
+Add the following dependency to your `project.clj`:
+
 ```clj
 [clojure.joda-time "0.1.0"]
 ```
