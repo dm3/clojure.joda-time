@@ -114,10 +114,10 @@ What if we want a specific date?
 Does the interval from `now` to `in-five-years` contain this date?
 
 ```clj
-(after? in-five-years now in-two-years)
+(after? in-five-years in-two-years now)
 => true
 
-(after? in-five-years-local now-local in-two-years-local)
+(after? in-five-years-local in-two-years-local now-local)
 => true
 ```
 
@@ -175,10 +175,10 @@ In case we want to print the dates, we'll need a formatter:
 And what about parsing?
 
 ```clj
-(j/parse-date-time our-formatter "2013/12/10")
+(parse-date-time our-formatter "2013/12/10")
 => #<DateTime 2013-12-10T00:00:00.000+02:00>
 
-(j/parse-local-date our-formatter "2013/12/10")
+(parse-local-date our-formatter "2013/12/10")
 => #<LocalDate 2013-12-10>
 ```
 
