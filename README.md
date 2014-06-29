@@ -29,7 +29,7 @@ timezone by default, as they are in **clj-time**.
 Add the following dependency to your `project.clj`:
 
 ```clj
-[clojure.joda-time "0.1.0"]
+[clojure.joda-time "0.2.0"]
 ```
 
 [API](http://dm3.github.io/clojure.joda-time/) of the Clojure.Joda-Time
