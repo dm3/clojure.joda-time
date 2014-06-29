@@ -184,7 +184,8 @@
           (try ; This might fail if the resulting partial is invalid, e.g.:
                ; 2010-02-29
                (apply c/merge parts)
-               (catch IllegalFieldValueException e)))))))
+               (catch IllegalFieldValueException e)))))
+    100))
 
 (defn contiguous-multi-field-partial [& {:keys [chrono allowed-fields required-fields]
                                          :or {chrono default-chronology
@@ -192,7 +193,8 @@
   (g/such-that (fn [p] (DateTimeUtils/isContiguous p))
                (multi-field-partial :chrono chrono
                                     :allowed-fields allowed-fields
-                                    :required-fields required-fields)))
+                                    :required-fields required-fields)
+               100))
 
 (def local-date
   (g/fmap #(LocalDate. %)
@@ -252,7 +254,8 @@
           (g/such-that #(or (.isAfter % date) (.isEqual % date))
                        (multi-field-partial :chrono c
                                             :required-fields fields
-                                            :allowed-fields fields)))))
+                                            :allowed-fields fields)
+                       100))))
 
 (defn- same-chronology [date]
   (cond (instance? ReadableInstant date)
@@ -294,4 +297,5 @@
                     (and (:duration %) (:end %))
                     (and (:start %) (:end %))
                     (some (set valid-period-field-types) (keys %)))
-               period-construction-map))
+               period-construction-map
+               100))

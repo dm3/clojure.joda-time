@@ -16,7 +16,7 @@
 
 ; very costly to run
 (defspec constructs-period-from-a-map-of-parameters 10
-  (prop/for-all [params (gen/such-that not-empty jg/period-construction-params)]
+  (prop/for-all [params (gen/not-empty jg/period-construction-params)]
                 (let [period (j/period params)
                       {:keys [start end duration type chronology]} params
                       start (coerce-to-long-if-number start)
