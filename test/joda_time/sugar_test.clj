@@ -10,19 +10,21 @@
     (let [ctor (symbol "joda-time.sugar" (str duration-type '-in))
           period-ctor (symbol "j" (str duration-type))]
       (eval `(testing ~(str "in " duration-type)
-               (is (= (~ctor 1)
-                      (~ctor (~period-ctor 1))
-                      (~ctor (j/interval (j/date-time)
-                                         (j/plus (j/date-time) (~period-ctor 1))))
-                      (~ctor (j/date-time) (j/plus (j/date-time) (~period-ctor 1)))
-                      (~ctor (j/partial-interval
-                               (j/local-date-time)
-                               (j/plus (j/local-date-time) (~period-ctor 1))))
-                      (~ctor (j/local-date-time) (j/plus (j/local-date-time) (~period-ctor 1)))
-                      ~(if handles-duration?
-                         `(~ctor (j/duration {:start 0, :period (~period-ctor 1)}))
-                         1)
-                      1)))))))
+               (let [now# (j/date-time)
+                     now-local# (j/local-date-time)]
+                 (is (= (~ctor 1)
+                        (~ctor (~period-ctor 1))
+                        (~ctor (j/interval now#
+                                           (j/plus now# (~period-ctor 1))))
+                        (~ctor now# (j/plus now# (~period-ctor 1)))
+                        (~ctor (j/partial-interval
+                                 now-local#
+                                 (j/plus now-local# (~period-ctor 1))))
+                        (~ctor now-local# (j/plus now-local# (~period-ctor 1)))
+                        ~(if handles-duration?
+                           `(~ctor (j/duration {:start 0, :period (~period-ctor 1)}))
+                           1)
+                        1))))))))
 
 (deftest number-of-duration-units-handles-partial-intervals
   (is (= 3 (j/years-in (j/partial-interval (j/local-date "2010") (j/local-date "2013")))))
