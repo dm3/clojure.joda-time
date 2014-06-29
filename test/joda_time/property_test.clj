@@ -1,8 +1,8 @@
 (ns joda-time.property-test
   (:require [clojure.test :refer :all]
-            [simple-check.properties :as prop]
-            [simple-check.generators :as gen]
-            [simple-check.clojure-test :refer (defspec)]
+            [clojure.test.check.properties :as prop]
+            [clojure.test.check.generators :as gen]
+            [clojure.test.check.clojure-test :refer (defspec)]
             [joda-time.generators :as jg]
             [joda-time.core :as c]
             [joda-time :as j]))

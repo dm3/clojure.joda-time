@@ -9,7 +9,7 @@
     [clojure.string :as str]
     [clojure.test :as test]
 
-    [simple-check.generators :as g]
+    [clojure.test.check.generators :as g]
     [joda-time :as j]
     [joda-time.purgatory :as p]
     [joda-time.generators :as jg]

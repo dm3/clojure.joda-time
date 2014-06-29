@@ -1,6 +1,6 @@
 (ns joda-time.generators
   (:refer-clojure :exclude (partial))
-  (:require [simple-check.generators :as g]
+  (:require [clojure.test.check.generators :as g]
             [joda-time.core :as c]
             [joda-time :as j]
             [clojure.set :as sets])
