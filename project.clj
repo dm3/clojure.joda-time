@@ -1,4 +1,4 @@
-(defproject clojure.joda-time "0.3.0"
+(defproject clojure.joda-time "0.3.1-SNAPSHOT"
   :description "Idiomatic Clojure wrapper for Joda-Time"
   :url "http://github.com/dm3/clojure.joda-time"
   :license {:name "MIT License"
@@ -20,4 +20,5 @@
              :1.7 {:repositories [["snapshots" "https://oss.sonatype.org/content/repositories/snapshots/"]]
                    :dependencies [[org.clojure/clojure "1.7.0-master-SNAPSHOT"]]}}
   :aliases {"test-all" ["with-profile" "dev,default:dev,1.4,default:dev,1.5,default:dev,1.7,default" "test"]}
-  :deploy-repositories [["releases" :clojars]])
+  :deploy-repositories [["clojars" {:url "https://clojars.org/repo"
+                                    :sign-releases false}]])
