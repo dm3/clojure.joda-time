@@ -1,11 +1,11 @@
-(defproject clojure.joda-time "0.2.1-SNAPSHOT"
+(defproject clojure.joda-time "0.3.0-SNAPSHOT"
   :description "Idiomatic Clojure wrapper for Joda-Time"
   :url "http://github.com/dm3/clojure.joda-time"
   :license {:name "MIT License"
             :url "http://opensource.org/licenses/MIT"}
   :scm {:name "git"
         :url "http://github.com/dm3/clojure.joda-time"}
-  :dependencies [[joda-time/joda-time "2.3"]]
+  :dependencies [[joda-time/joda-time "2.6"]]
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.6.0"]
                                   [org.clojure/test.check "0.5.8"]
                                   [criterium "0.4.2"]]
