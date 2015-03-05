@@ -17,8 +17,7 @@
              :1.3 {:dependencies [[org.clojure/clojure "1.3.0"]]}
              :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
-             :1.7 {:repositories [["snapshots" "https://oss.sonatype.org/content/repositories/snapshots/"]]
-                   :dependencies [[org.clojure/clojure "1.7.0-master-SNAPSHOT"]]}}
+             :1.7 {:dependencies [[org.clojure/clojure "1.7.0-alpha5"]]}}
   :aliases {"test-all" ["with-profile" "dev,default:dev,1.4,default:dev,1.5,default:dev,1.7,default" "test"]}
   :deploy-repositories [["clojars" {:url "https://clojars.org/repo"
                                     :sign-releases false}]])
