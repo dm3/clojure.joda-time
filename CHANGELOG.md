@@ -1,3 +1,7 @@
+0.4.0
+
+* Upgrade Joda-Time to 2.7
+
 0.3.0
 
 * Upgrade Joda-Time to 2.6
