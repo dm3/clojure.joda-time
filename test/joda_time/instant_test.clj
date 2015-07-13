@@ -37,3 +37,9 @@
          (j/date-time "2010-01-01T10:00:00.000")))
   (let [ldt (j/local-date-time)]
     (is (= (j/local-date-time (j/date-time ldt)) ldt))))
+
+(deftest construct-positional
+  (is (= (j/date-time "2015-1-1T20:20:30.123")
+         (j/date-time 2015 1 1 20 20 30 123)))
+  (is (= (j/date-time "2015-1-1T00:00:00.000")
+         (j/date-time 2015 1))))

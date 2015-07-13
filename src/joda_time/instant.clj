@@ -57,13 +57,22 @@
   * a map with keys `partial` representing any partial date and `base`
   representing a date-time to be used for fields missing in the partial
   (defaults to epoch).
+  * different arities accepting a number of fields in order of Year, Month,
+  Day, Hour, Minute, Second, Millis. The fields not specified will be defaulted
+  to the minimum field value.
 
   When called with no arguments produces a value of `DateTime/now`."
   ([] (DateTime/now))
   ([o] (cond
          (nil? o) nil
          (map? o) (apply mk-date-time (date-time-ctor-from-map o))
-         :else (DateTime. o))))
+         :else (DateTime. o)))
+  ([y m] (mk-date-time y m 1 0 0 0 0 nil))
+  ([y m d] (mk-date-time y m d 0 0 0 0 nil))
+  ([y m d h] (mk-date-time y m d h 0 0 0 nil))
+  ([y m d h mm] (mk-date-time y m d h mm 0 0 nil))
+  ([y m d h mm s] (mk-date-time y m d h mm s 0 nil))
+  ([y m d h mm s mmm] (mk-date-time y m d h mm s mmm nil)))
 
 (try
   (doto (org.joda.time.convert.ConverterManager/getInstance)

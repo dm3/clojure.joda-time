@@ -171,6 +171,19 @@
             chrono (GJChronology/getInstance)]
         (is (= (java-ctor-fn chrono) (ctor-fn cal)))))))
 
+(deftest multi-arity-constructors
+  (is (= (j/local-date 2015 2) (j/local-date 2015 2 1)))
+  (is (= (j/local-date-time 2015 2)
+         (j/local-date-time 2015 2 1 0)
+         (j/local-date-time 2015 2 1 0 0)
+         (j/local-date-time 2015 2 1 0 0 0)
+         (j/local-date-time 2015 2 1 0 0 0 0)))
+  (is (= (j/local-time 10 1)
+         (j/local-time 10 1 0)
+         (j/local-time 10 1 0 0)))
+  (is (= (j/year-month 2015 7) (j/year-month "2015-7")))
+  (is (= (j/month-day 7 1) (j/month-day "2015-7-1"))))
+
 (deftest test-string-format-construction
   (testing "LocalDate from string"
     (let [d (LocalDate. millis-1970-01-12)]

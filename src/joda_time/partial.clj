@@ -49,12 +49,24 @@
              (map? o) (partial-from-map o)
              :else (Partial. ^ReadablePartial o))))
 
-(doseq [[fn-name partial-type] [['local-date 'LocalDate]
-                                ['local-date-time 'LocalDateTime]
-                                ['local-time 'LocalTime]
-                                ['year-month 'YearMonth]
-                                ['month-day 'MonthDay]
-                                ['partial 'Partial]]]
+(def ^:private ^:const default-values
+  {:year 0
+   :month 1
+   :day 1
+   :hour 0
+   :minute 0
+   :second 0
+   :millis 0})
+
+(doseq [[fn-name partial-type positional-args] [['local-date 'LocalDate
+                                                 [:year :month :day]]
+                                                ['local-date-time 'LocalDateTime
+                                                 [:year :month :day :hour :minute :second :millis]]
+                                                ['local-time 'LocalTime
+                                                 [:hour :minute :second :millis]]
+                                                ['year-month 'YearMonth [:year :month]]
+                                                ['month-day 'MonthDay [:month :day]]
+                                                ['partial 'Partial []]]]
   (when (not= 'partial fn-name) ; Partial construction fn is specified explicitly
     (let [partial-ctor (symbol (str partial-type '.))]
       (eval `(defn ~(with-meta fn-name {:tag partial-type})
@@ -64,13 +76,21 @@
                      "  * a java (util/sql) Date/Timestamp or a Calendar\n"
                      "  * an ISO formatted string\n"
                      "  * a map with keys corresponding to the names of date-time field types\n"
-                     "    and an (optional) chronology.\n\n"
+                     "    and an (optional) chronology.\n"
+                     "  * a number of ints for the multi-argument varieties of partial constructors.\n\n"
                      "  When called with no arguments produces a value of `" partial-type "/now`.")
                ([] (. ~partial-type now))
                ([o#] (cond (nil? o#) nil
                            (map? o#) (~partial-ctor (partial-from-map o#))
                            (number? o#) (~partial-ctor (long o#))
-                           :else (~partial-ctor o#)))))))
+                           :else (~partial-ctor o#)))
+               ~@(->> (range 2 (inc (count positional-args)))
+                      (map (fn [r]
+                             (let [syms (map #(symbol (name (nth positional-args %))) (range r))]
+                               (list (vec syms)
+                                     `(~partial-ctor
+                                        ~@(concat (map (fn [s] `(int ~s)) syms)
+                                                  (map (fn [p] (p default-values)) (drop r positional-args)))))))))))))
 
   (let [result (with-meta (gensym) {:tag partial-type})]
     (eval `(extend-type ~partial-type
