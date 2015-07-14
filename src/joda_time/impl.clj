@@ -13,16 +13,19 @@
             (assoc result (name field-name) (eval `(. ~type-symbol ~field-name))))
           {} names))
 
-(def date-time-field-type-names
+(def ^:const date-time-field-type-names
   ['era 'centuryOfEra 'year 'yearOfCentury 'weekyear 'yearOfEra
    'weekyearOfCentury 'monthOfYear 'weekOfWeekyear 'dayOfYear 'dayOfMonth
    'dayOfWeek 'halfdayOfDay 'hourOfDay 'clockhourOfDay 'clockhourOfHalfday
    'hourOfHalfday 'minuteOfDay 'minuteOfHour 'secondOfDay
    'secondOfMinute 'millisOfDay 'millisOfSecond])
 
-(def duration-field-type-names
+(def ^:const duration-field-type-names
   ['eras 'centuries 'years 'months 'weeks 'weekyears 'days 'halfdays 'hours
    'minutes 'seconds 'millis])
+
+(def ^:const period-types
+  ['years 'months 'weeks 'days 'hours 'minutes 'seconds 'millis])
 
 (def date-time-field-types
   (as-field-types DateTimeFieldType date-time-field-type-names))

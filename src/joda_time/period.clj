@@ -143,10 +143,7 @@
              (map? o) (apply mk-period (period-constructor-params o t))
              :else (Period. ^Object o ^PeriodType (coerce-period-type t))))))
 
-(def ^:private statically-typed-periods
-  ['years 'months 'weeks 'days 'hours 'minutes 'seconds])
-
-(doseq [period-type statically-typed-periods]
+(doseq [period-type (remove #(= % 'millis) impl/period-types)]
   (let [capitalized-type (string/capitalize (str period-type))]
     (eval `(defn ~(with-meta period-type {:tag (symbol capitalized-type)})
              ~(str "Constructs a " capitalized-type
