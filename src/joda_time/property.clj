@@ -46,3 +46,12 @@
        (with-max-value [p#] (.setCopy p# (max-value p#)))
 
        (with-value [p# v#] (.setCopy p# (int v#))))))
+
+(extend-type nil
+  Property
+  (value [_] nil)
+  (min-value [_] nil)
+  (with-min-value [_] nil)
+  (max-value [_] nil)
+  (with-max-value [_] nil)
+  (with-value [_ _] nil))

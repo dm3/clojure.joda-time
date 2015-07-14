@@ -68,4 +68,8 @@
 
   (testing "Date with a specified value of a property"
     (is (= (j/with-value (j/property (j/date-time "2010-03") :monthOfYear) 12)
-           (j/date-time "2010-12")))))
+           (j/date-time "2010-12"))))
+
+  (testing "Works with a nil"
+    (is (nil? (j/value nil)))
+    (is (nil? (j/max-value nil)))))
