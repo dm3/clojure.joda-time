@@ -194,7 +194,7 @@
                (multi-field-partial :chrono chrono
                                     :allowed-fields allowed-fields
                                     :required-fields required-fields)
-               100))
+               200))
 
 (def local-date
   (g/fmap #(LocalDate. %)
@@ -255,7 +255,7 @@
                        (multi-field-partial :chrono c
                                             :required-fields fields
                                             :allowed-fields fields)
-                       100))))
+                       200))))
 
 (defn- same-chronology [date]
   (cond (instance? ReadableInstant date)
@@ -298,4 +298,4 @@
                     (and (:start %) (:end %))
                     (some (set valid-period-field-types) (keys %)))
                period-construction-map
-               100))
+               200))
