@@ -26,6 +26,11 @@
                            1)
                         1))))))))
 
+(deftest aggregates-the-period-duration
+  (is (= 121 (j/seconds-in (j/period {:minutes 2, :seconds 1}))))
+  (is (= 120 (j/minutes-in (j/hours 2))))
+  (is (= (+ (* 24 60) 120) (j/minutes-in (j/plus (j/days 1) (j/hours 2))))))
+
 (deftest number-of-duration-units-handles-partial-intervals
   (is (= 3 (j/years-in (j/partial-interval (j/local-date "2010") (j/local-date "2013")))))
 

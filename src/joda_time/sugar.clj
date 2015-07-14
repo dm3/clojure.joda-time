@@ -27,16 +27,25 @@
 
 (def ^:private handles-duration #{'hours 'minutes 'seconds 'millis})
 
-(doseq [duration-type ['years 'months 'weeks 'days 'hours 'minutes
-                       'seconds 'millis]]
-  (let [fn-name (symbol (str duration-type '-in))]
+(doseq [[duration-type getter-name standard?]
+        [['years "Years" false] ['months "Months" false]
+         ['weeks "Weeks" true] ['days "Days" true]
+         ['hours "Hours" true] ['minutes "Minutes" true]
+         ['seconds "Seconds" true] ['millis "Duration" true]]]
+  (let [fn-name (symbol (str duration-type '-in))
+        capitalized-type (string/capitalize (str duration-type))
+        input-var (gensym)]
     (eval `(defn ~fn-name
              ~(str "Number of " duration-type " in the given period/interval/pair of\n"
                    "instants, date-times or partials."
                    (when (handles-duration duration-type) " Also handles durations."))
-             ([o#]
-              (~(symbol (str '.get (string/capitalize (str duration-type))))
-                        (~(symbol "period" (str duration-type)) o#)))
+             ([~input-var]
+              (~(symbol (str '.get capitalized-type))
+                        (if (c/period? ~input-var)
+                          ~(if standard?
+                             `(~(symbol (str '.toStandard getter-name)) (.toPeriod ~input-var))
+                             input-var)
+                          (~(symbol "period" (str duration-type)) ~input-var))))
              ([x# y#]
               (if (c/instant? x#)
                 (~fn-name (interval/interval x# y#))
