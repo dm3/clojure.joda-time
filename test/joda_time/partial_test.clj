@@ -12,15 +12,13 @@
             LocalDateTime YearMonth MonthDay DateTimeUtils]
            [org.joda.time.chrono GJChronology]))
 
-;TODO: currently fails due to https://github.com/JodaOrg/joda-time/issues/96
-#_(defspec partial-reconstructed-from-map-representation 100
+(defspec partial-reconstructed-from-map-representation 100
   (prop/for-all [^ReadablePartial part jg/any-partial]
                 (= (j/partial (assoc (j/as-map part)
                                      :chronology (.getChronology part)))
                    part)))
 
-;TODO: currently fails due to https://github.com/JodaOrg/joda-time/issues/96
-#_(defspec map-of-merged-partials-same-as-merged-maps 100
+(defspec map-of-merged-partials-same-as-merged-maps 100
   (prop/for-all [partials (gen/not-empty (gen/vector jg/any-partial))]
                 (try
                   (= (apply j/merge partials)
