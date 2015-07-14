@@ -49,3 +49,9 @@
            ~(str "Returns true if the given instant/date-time/partial with the\n"
                  "  `dayOfWeek` property represents a " day-name ".")
            [o#] (= (prop/value (c/property o# :dayOfWeek)) ~day-number))))
+
+(defn weekend? [dt]
+  (or (saturday? dt) (sunday? dt)))
+
+(defn weekday? [dt]
+  (not (weekend? dt)))

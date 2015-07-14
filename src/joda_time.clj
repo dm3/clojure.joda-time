@@ -64,7 +64,7 @@
 
   [joda-time.sugar as-map
    millis-in seconds-in minutes-in hours-in days-in weeks-in months-in years-in
-   monday? tuesday? wednesday? thursday? friday? saturday? sunday?]
+   monday? tuesday? wednesday? thursday? friday? saturday? sunday? weekend? weekday?]
 
   [joda-time.format print formatter
    parse-local-date parse-local-date-time parse-local-time parse-date-time

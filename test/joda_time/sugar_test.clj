@@ -42,6 +42,12 @@
     (is (j/thursday? (ctor "2010-12-23")))
     (is (j/friday? (ctor "2010-12-24")))
     (is (j/saturday? (ctor "2010-12-25")))
-    (is (j/sunday? (ctor "2010-12-26"))))
+    (is (j/sunday? (ctor "2010-12-26")))
+
+    (is (not (j/weekend? (ctor "2010-12-24"))))
+    (is (j/weekend? (ctor "2010-12-25")))
+    (is (j/weekend? (ctor "2010-12-26")))
+    (is (not (j/weekday? (ctor "2010-12-26"))))
+    (is (j/weekday? (ctor "2010-12-27"))))
 
   (is (thrown? IllegalArgumentException (j/monday? (j/local-time "10:30")))))
