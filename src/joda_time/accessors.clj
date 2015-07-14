@@ -3,13 +3,14 @@
             [joda-time.impl :as impl]
             [joda-time.core :as c]))
 
-(doseq [date-time-field-type-name impl/date-time-field-type-names]
+(doseq [date-time-field-type-name (concat impl/date-time-field-type-names impl/period-types)]
   (let [value-fn (symbol (impl/dashize (str date-time-field-type-name)))
         prop-fn (symbol (str value-fn "-" 'prop))
         max-fn (symbol (str 'max "-" value-fn))
         min-fn (symbol (str 'min "-" value-fn))
         with-max-fn (symbol (str 'with-max "-" value-fn))
-        with-min-fn (symbol (str 'with-min "-" value-fn))]
+        with-min-fn (symbol (str 'with-min "-" value-fn))
+        with-fn (symbol (str 'with "-" value-fn))]
     (eval
       `(do
          (defn ~prop-fn
@@ -35,4 +36,8 @@
          (defn ~with-min-fn
            ~(str "The same date/partial with its " value-fn " set to the maximum value.\n"
                  "Equivalent to `(with-min-value (property date :" date-time-field-type-name "))`")
-           [o#] (prop/with-min-value (~prop-fn o#)))))))
+           [o#] (prop/with-min-value (~prop-fn o#)))
+         (defn ~with-fn
+           ~(str "The same date/partial with its " value-fn " set to the provided value.\n"
+                 "Equivalent to `(with-value (property date :" date-time-field-type-name ") value)`")
+           [o# v#] (prop/with-value (~prop-fn o#) v#))))))
