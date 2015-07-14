@@ -131,6 +131,9 @@
   (with-zone [dt zone]
     (.withZone dt (c/timezone zone))))
 
+(defn in-zone [^DateTime dt zone]
+  (.withZoneRetainFields dt (c/timezone zone)))
+
 ;;;;;;;; Instant
 
 (defn ^Instant instant

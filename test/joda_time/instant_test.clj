@@ -24,6 +24,11 @@
                 (= (c/seq-minus date-time periods-durations)
                    (c/seq-plus date-time (map j/negate periods-durations)))))
 
+(deftest in-zone-test
+  (is (= (j/in-zone (j/date-time 2015 1 1 20 0 0) :UTC)
+         (j/with-zone (j/plus (j/in-zone (j/date-time 2015 1 1 20 0 0) "Europe/Athens")
+                              (j/hours 2)) :UTC))))
+
 (deftest before-after-test
   (is (j/before? (j/date-time "2010") (j/date-time "2011") (j/date-time "2012")))
   (is (j/after? (j/date-time "2012") (j/date-time "2011") (j/date-time "2010"))))

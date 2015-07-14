@@ -53,7 +53,7 @@
 
   [joda-time.duration duration]
 
-  [joda-time.instant date-time instant]
+  [joda-time.instant date-time instant in-zone]
 
   [joda-time.partial partial
    local-date
