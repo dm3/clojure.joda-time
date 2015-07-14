@@ -5,7 +5,7 @@
             :url "http://opensource.org/licenses/MIT"}
   :scm {:name "git"
         :url "http://github.com/dm3/clojure.joda-time"}
-  :dependencies [[joda-time/joda-time "2.7"]]
+  :dependencies [[joda-time/joda-time "2.8.1"]]
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.6.0"]
                                   [org.clojure/test.check "0.5.8"]
                                   [criterium "0.4.2"]]
