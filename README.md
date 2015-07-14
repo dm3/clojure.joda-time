@@ -29,7 +29,7 @@ timezone by default, as they are in **clj-time**.
 Add the following dependency to your `project.clj`:
 
 ```clj
-[clojure.joda-time "0.2.0"]
+[clojure.joda-time "0.5.0"]
 ```
 
 [API](http://dm3.github.io/clojure.joda-time/) of the Clojure.Joda-Time
@@ -57,6 +57,13 @@ In UTC?
 ```clj
 (with-zone now (timezone :UTC))
 => #<DateTime 2013-12-10T11:07:16.000Z>
+```
+
+In UTC but with the current timezone's time?
+
+```clj
+(in-zone now (timezone :UTC))
+=> #<DateTime 2013-12-10T13:07:16.000Z>
 ```
 
 Without the time zone?
@@ -108,6 +115,16 @@ What if we want a specific date?
 => #<DateTime 2015-12-10T00:00:00.000+02:00>
 
 (def in-two-years-local (local-date-time "2015-12-10"))
+=> #<LocalDateTime 2015-12-10T00:00:00.000>
+```
+
+Same with positional arguments:
+
+```clj
+(def in-two-years-positional (date-time 2015 12 10))
+=> #<DateTime 2015-12-10T00:00:00.000+02:00>
+
+(def in-two-years-local-positional (local-date-time 2015 12 10))
 => #<LocalDateTime 2015-12-10T00:00:00.000>
 ```
 
@@ -257,29 +274,6 @@ midnight date, you should be use:
 => #<DateTime 2013-12-10T00:00:00.000+02:00>
 ```
 
-Also, there are no overloads for date-time constructors which specify a year, a
-year and month, etc. The reason is I don't find them especially useful - you
-can always construct a date at a given date by using an ISO-formatted string:
-
-```clj
-(date-time "2010")
-=> #<DateTime 2010-01-01T00:00:00.000+02:00>
-
-(date-time "2010-12-20")
-=> #<DateTime 2010-12-20T00:00:00.000+02:00>
-```
-
-This has a disadvantage of not being able to partially apply a constructor,
-like:
-
-```clj
-(def at-year-2010 (partial (date-time 2010)))
-```
-
-For now I'm not convinced that multi-argument date-time constructors should be
-supported as in **clj-time** (you're welcome to open a ticket and describe your
-reasons).
-
 #### Partials
 
 [Partials](http://www.joda.org/joda-time/key_partial.html) are represented by
@@ -307,6 +301,10 @@ reasons).
 (month-day)
 => #<MonthDay --12-10>
 ```
+
+Multi-arity versions of the constructors are also supported. The fields not
+provided will default to minimum values (0 for hours, minutes, seconds, millis;
+1 for days).
 
 #### Periods
 
@@ -541,6 +539,9 @@ Timezones can be constructed through the `timezone` function given the
 (timezone)
 => #<CachedDateTimeZone Europe/Vilnius>
 
+(timezone "Europe/Vilnius")
+=> #<CachedDateTimeZone Europe/Vilnius>
+
 (timezone :UTC)
 => #<FixedDateTimeZone UTC>
 ```
@@ -680,14 +681,14 @@ in the UTC timezone. We can check that everything is OK by converting back to
 the Joda date-time:
 
 ```clj
-(= (date-time "2013-12-10") (date-time (to-java-date "2013-12-10")))
+(= (date-time 2013 12 10) (date-time (to-java-date "2013-12-10")))
 => true
 ```
 
 Same with local dates:
 
 ```clj
-(= (local-date-time "2013-12-10") (local-date-time (to-java-date "2013-12-10")))
+(= (local-date-time 2013 12 10) (local-date-time (to-java-date "2013-12-10")))
 => true
 ```
 
@@ -833,7 +834,7 @@ same with instants:
 with partials:
 
 ```clj
-(def now (local-date "2010-01-01"))
+(def now (local-date 2010 1 1))
 => #<LocalDate 2010-01-01>
 
 (plus now (years 11) (months 10) (days 20))
