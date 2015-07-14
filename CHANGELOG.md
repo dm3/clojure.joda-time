@@ -1,3 +1,11 @@
+0.6.0
+
+* Add `joda-time.accessors` namespace for accessors on property values, e.g.
+  `year`, `min-year`, `max-year`, `with-min-year`, `with-max-year`.
+* Remove property accessors from `joda-time.purgatory`. Their uses will have to
+  be replaced with `joda-time.accessors/${property}-prop` functions.
+* Add `weekend?`/`weekday?` predicates
+
 0.5.0
 
 * Upgrade Joda-time to 2.8.1

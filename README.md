@@ -29,7 +29,7 @@ timezone by default, as they are in **clj-time**.
 Add the following dependency to your `project.clj`:
 
 ```clj
-[clojure.joda-time "0.5.0"]
+[clojure.joda-time "0.6.0"]
 ```
 
 [API](http://dm3.github.io/clojure.joda-time/) of the Clojure.Joda-Time
@@ -166,6 +166,27 @@ The date at the last day of month?
 
 (def new-years-eve (-> now-local (property :dayOfMonth) with-max-value)
 => #<LocalDateTime 2013-12-31T13:07:16.000>
+```
+
+We can also do this using the `accessors` namespace:
+
+```clj
+(require '[joda-time.accessors :as ja])
+
+(value (ja/day-of-month-prop now))
+=> 10
+
+(ja/day-of-month now)
+=> 10
+
+(ja/min-day-of-month now)
+=> 1
+
+(ja/max-day-of-month now)
+=> 31
+
+(ja/with-max-day-of-month now)
+=> #<DateTime 2013-12-31T13:07:16.000+02:00>
 ```
 
 Every date at the last day of month from now?
@@ -783,6 +804,9 @@ or get the date for the first day:
 ```clj
 (-> (date-time) (properties :dayOfMonth) with-min-value)
 ```
+
+The above can also be done using the `joda-time.accessors` namespace which
+defines a function for every possible date-time field supported by Joda-Time.
 
 We can also solve a common problem of getting a sequence of dates for the last
 day of month:
