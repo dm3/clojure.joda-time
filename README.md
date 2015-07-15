@@ -16,13 +16,18 @@ Main goals:
 * Provide an entry point into Joda-Time by freeing the user from importing most
   of the Joda-Time classes.
 
-Compared to [clj-time](https://github.com/clj-time/clj-time), this library is
-not `DateTime`-centric. If you tend to use **local** dates in most of your
-projects, meaning you don't care about the time zones, there's no purpose in
-using `DateTime` at all. You should be using various `Partials` provided by
-Joda-Time, most common being `LocalDate` and `LocalDateTime`. This also means
-that date-times created through Clojure.Joda-Time are not converted to the UTC
-timezone by default, as they are in **clj-time**.
+Why use Clojure.Joda-Time over [clj-time](https://github.com/clj-time/clj-time)?
+
+* You don't need to treat `DateTime` differently from other dates
+* You need to operate on custom `Periods` and `Partials`
+* You want to have everything handy under a single namespace
+* You know the Joda-Time library and want to stay close to the original API
+* You need to perform complicated operations on dates/periods/intervals/durations
+
+This library employs a structured and comprehensive approach to exposing the
+Joda-Time API to the Clojure world. It can help in the 10% of cases when
+functionality provided by *clj-time* isn't enough. Try it out and see if it
+sticks!
 
 ## Usage
 
@@ -148,6 +153,16 @@ Another way, actually using the interval type:
 => true
 ```
 
+What's the largest/smallest date in the list?
+
+```clj
+(max now in-five-years in-two-years)
+=> #<DateTime 2019-06-10T13:07:16.000+03:00>
+
+(min now in-five-years in-two-years)
+=> #<DateTime 2013-12-10T13:07:16.000+02:00>
+```
+
 What about the current day of month?
 
 ```clj
@@ -187,6 +202,9 @@ We can also do this using the `accessors` namespace:
 
 (ja/with-max-day-of-month now)
 => #<DateTime 2013-12-31T13:07:16.000+02:00>
+
+(ja/with-day-of-month now 20)
+=> #<DateTime 2013-12-20T13:07:16.000+02:00>
 ```
 
 Every date at the last day of month from now?
@@ -387,18 +405,23 @@ duration (same as `Years.yearsIn`, `Months.monthsIn`, etc. in Joda-Time):
 => #<Minutes PT1052640M>
 ```
 
-You can get the value of the single-field period using the helper functions:
+You can get the value of the single-field period using the helper functions in
+`joda-time.accessors`:
 
 ```clj
-(minutes-in (period {:years 20, :minutes 10}))
+(ja/minutes (period {:hours 20, :minutes 10}))
 => 10
-
-(minutes-in (interval (date-time "2008") (date-time "2010")))
-=> 1052640
-
-(minutes-in (duration (* 1000 1000))
-=> 16
 ```
+
+To get the standard duration of the period, use one of the `-in` functions:
+
+```clj
+(minutes-in (period {:hours 20, :minutes 10}))
+=> 1210
+```
+
+Be aware that standard duration doesn't work for periods containing months or
+years as they are variable length.
 
 You can also query the type of the period:
 
@@ -808,13 +831,16 @@ or get the date for the first day:
 The above can also be done using the `joda-time.accessors` namespace which
 defines a function for every possible date-time field supported by Joda-Time.
 
+```clj
+(ja/with-max-day-of-month (date-time))
+(ja/with-min-day-of-month (date-time))
+```
+
 We can also solve a common problem of getting a sequence of dates for the last
 day of month:
 
 ```clj
-(iterate plus
-         (-> (local-date) (property :dayOfMonth) with-max-value)
-         (months 1))
+(iterate #(ja/with-max-day-of-month (plus %1 %2)) (local-date) (months 1))
 => (#<LocalDate 2013-12-31> #<LocalDate 2014-01-31> ...)
 ```
 
