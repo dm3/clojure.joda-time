@@ -18,9 +18,9 @@ Main goals:
 
 Why use Clojure.Joda-Time over [clj-time](https://github.com/clj-time/clj-time)?
 
-* You don't need to treat `DateTime` differently from other dates
-* You need to operate on custom `Periods` and `Partials`
-* You want to have everything handy under a single namespace
+* You don't want to treat `DateTime` differently from other dates
+* You need to operate on arbitrary `Periods` and `Partials`
+* You want to have everything handy under a single namespace (two, if you want some sugar)
 * You know the Joda-Time library and want to stay close to the original API
 * You need to perform complicated operations on dates/periods/intervals/durations
 
@@ -189,7 +189,7 @@ We can also do this using the `accessors` namespace:
 (require '[joda-time.accessors :as ja])
 
 (value (ja/day-of-month-prop now))
-=> 10
+=> #<Property Property[dayOfMonth]>
 
 (ja/day-of-month now)
 => 10
