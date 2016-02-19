@@ -1,5 +1,12 @@
 # Clojure.Joda-Time
 
+## For Java 8 Users
+
+If you are on Java 8 and don't need to support earlier Java versions, consider
+using [Clojure.Java-Time](https://github.com/dm3/clojure.java-time)!
+
+## For Java 7-and-below Users
+
 [![Build Status](https://travis-ci.org/dm3/clojure.joda-time.png?branch=master)](https://travis-ci.org/dm3/clojure.joda-time)
 
 An idiomatic Clojure wrapper for Joda-Time.
