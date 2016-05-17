@@ -5,19 +5,15 @@
             :url "http://opensource.org/licenses/MIT"}
   :scm {:name "git"
         :url "http://github.com/dm3/clojure.joda-time"}
-  :dependencies [[joda-time/joda-time "2.8.1"]]
-  :profiles {:dev {:dependencies [[org.clojure/clojure "1.6.0"]
-                                  [org.clojure/test.check "0.5.8"]
-                                  [criterium "0.4.2"]]
+  :dependencies [[joda-time/joda-time "2.9.3"]]
+  :profiles {:dev {:dependencies [[org.clojure/clojure "1.8.0"]
+                                  [org.clojure/test.check "0.9.0"]
+                                  [criterium "0.4.4"]]
                    :plugins [[codox "0.8.13"]]
                    :codox {:include [joda-time joda-time.purgatory joda-time.accessors]}
                    :source-paths ["dev"]
                    :global-vars {*warn-on-reflection* true}}
-             :1.2 {:dependencies [[org.clojure/clojure "1.2.1"]]}
-             :1.3 {:dependencies [[org.clojure/clojure "1.3.0"]]}
-             :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
-             :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
              :1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}}
-  :aliases {"test-all" ["with-profile" "dev,default:dev,1.4,default:dev,1.5,default:dev,1.7,default" "test"]}
+  :aliases {"test-all" ["with-profile" "dev,default:dev,1.7,default" "test"]}
   :deploy-repositories [["clojars" {:url "https://clojars.org/repo"
                                     :sign-releases false}]])

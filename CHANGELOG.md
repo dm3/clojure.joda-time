@@ -1,3 +1,8 @@
+0.7.0
+
+* Upgrade Joda-Time to 2.9.3
+* Upgrade default Clojure version to 1.8.0, remove 1.2-1.6 from tested versions
+
 0.6.0
 
 * Add `joda-time.accessors` namespace for accessors on property values, e.g.
@@ -14,7 +19,7 @@
 
 0.5.0
 
-* Upgrade Joda-time to 2.8.1
+* Upgrade Joda-Time to 2.8.1
 * Add multi-arity `date-time` and partial date constructor functions
 * Add `in-zone` which calls `.withZoneRetainFields` on a `DateTime` putting the
   date-time in the specified zone without moving the clock
