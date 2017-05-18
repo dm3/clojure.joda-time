@@ -41,7 +41,7 @@ sticks!
 Add the following dependency to your `project.clj`:
 
 ```clj
-[clojure.joda-time "0.6.0"]
+[clojure.joda-time "0.7.0"]
 ```
 
 [API](http://dm3.github.io/clojure.joda-time/) of the Clojure.Joda-Time
